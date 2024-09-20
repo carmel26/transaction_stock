@@ -1,0 +1,56 @@
+{% extends 'stock/base.html' %}
+{% load form_tags %}
+
+{% block title %}Détails du Produit{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h2><i class="bi bi-box"></i> {{ produit.nom }}</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Description :</strong> {{ produit.description }}</p>
+        <p><strong>Quantité :</strong> {{ produit.quantite }}</p>
+    </div>
+</div>
+
+<h3><i class="bi bi-clipboard-data"></i> Transactions</h3>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in produit.transactions.all %}
+            <tr>
+                <td>{{ transaction.date|date:"d/m/Y H:i" }}</td>
+                <td>
+                    {% if transaction.type == 'ENT' %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-plus-circle"></i> Entrée
+                        </span>
+                    {% elif transaction.type == 'SOR' %}
+                        <span class="badge bg-danger">
+                            <i class="bi bi-dash-circle"></i> Sortie
+                        </span>
+                    {% endif %}
+                </td>
+                <td>{{ transaction.quantite }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">Aucune transaction enregistrée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'stock:produit_list' %}" class="btn btn-secondary" title="Retour à la Liste">
+    <i class="bi bi-arrow-left-circle"></i>
+</a>
+{% endblock %}
